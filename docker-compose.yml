@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+
+  database-test:
+    image: mysql
+    container_name: db_test_tech
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks:
+      - test_tech
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: admin_test_tech
+    depends_on:
+      - database-test
+    ports:
+      - 8252:80
+    environment:
+      PMA_HOST: database-test
+    networks:
+      - test_tech
+
+  www:
+    build: php
+    container_name: base_test_tech
+    ports:
+      - "8253:80"
+    volumes:
+      - ./php/vhosts:/etc/apache2/sites-enabled
+      - ./:/var/www
+    networks:
+      - test_tech
+
+networks:
+  test_tech:
+
+    null
+volumes:
+  db-data: null

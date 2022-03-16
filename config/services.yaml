@@ -1,0 +1,35 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: "../src/"
+        exclude:
+            - "../src/DependencyInjection/"
+            - "../src/Entity/"
+            - "../src/Kernel.php"
+
+    App\Controller\TransactionWriteController:
+        tags: [controller.service_arguments]
+    App\Controller\TransactionReadController:
+        tags: [controller.service_arguments]
+    App\Controller\WalletWriteController:
+        tags: [controller.service_arguments]
+    App\Controller\UsersReadController:
+        tags: [controller.service_arguments]
+    App\Controller\WalletReadController:
+        tags: [controller.service_arguments]
+    App\Controller\WalletItemController:
+        tags: [controller.service_arguments]
+
+    App\OpenApi\OpenApiFactory:
+        decorates: "api_platform.openapi.factory"
+        arguments: ['@App\OpenApi\OpenApiFactory.inner']
+        autoconfigure: false
+
+    App\OpenApi\JwtDecorator:
+        decorates: "api_platform.openapi.factory"
+        arguments: ["@.inner"]
